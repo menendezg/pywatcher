@@ -40,20 +40,28 @@ def check_web(url: str) -> bool:
 
 
 if __name__ == "__main__":
-    config = configparser.ConfigParser()
     path = get_path(".")
+    config = configparser.ConfigParser()
     config.read(f"{path}/settings.ini")
     print(f"running watchmen...")
     url = config['DEFAULT']['URL']
+    bad_message = (
+        f"URL CHECKED : -> {url}\n EMM, Houston, we have a problem. [ERROR]"
+        f"CHECK ASAP")
+    good_message = (f"URL CHECKED : -> {url}\n ALL THINGS ARE RUNNIN [OK]"
+                    f"Grab a coffe and enjoy your day")
+
     if check_web(url):
-        print(f"URL CHECKED : -> {url}\nALL THINGS ARE RUNNIN [OK]"
-              f"Grab a coffe and enjoy your day")
+        print(good_message)
         telegram_messager = TelegramMessager(
             config["DEFAULT"]["TELEGRAM_BOT_TOKEN"],
             config["DEFAULT"]["TELEGRAM_CHAT_ID"])
-        telegram_messager.send_message(
-            f"URL CHECKED : -> {url}\n"
-            f"ALL THINGS ARE RUNNIN [OK]. Grab a coffe and enjoy your day")
+        telegram_messager.send_message(good_message)
 
     else:
+        print(bad_message)
+        telegram_messager = TelegramMessager(
+            config["DEFAULT"]["TELEGRAM_BOT_TOKEN"],
+            config["DEFAULT"]["TELEGRAM_CHAT_ID"])
+        telegram_messager.send_message(bad_message)
         print(f"Well we have an error here. Check it as soon as possible")
