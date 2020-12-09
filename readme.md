@@ -1,4 +1,4 @@
-# watchemen
+# watchmen
 
 ## Goal
 Since I have a to check a couple of urls, I need a script to check
